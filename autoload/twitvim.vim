@@ -5012,43 +5012,6 @@ function! s:call_isgd(url)
     endif
 endfunction
 
-let s:googl_api_key = 'AIzaSyDvAhCUJppsPnPHgazgKktMoYap-QXCy5c'
-
-" Call Goo.gl API (documented version) to shorten a URL.
-function! s:call_googl(url)
-    let url = 'https://www.googleapis.com/urlshortener/v1/url?key='.s:googl_api_key
-    let parms = { '__json' : '{ "longUrl" : "'.a:url.'" }' }
-
-    redraw
-    echo "Sending request to goo.gl..."
-
-    let [error, output] = s:run_curl(url, '', s:get_proxy(), s:get_proxy_login(), parms)
-
-    " Remove nul characters.
-    let output = substitute(output, '[\x0]', ' ', 'g')
-
-    let result = s:parse_json(output)
-
-    if has_key(result, 'error') && has_key(result.error, 'message')
-        call s:errormsg("Error calling goo.gl API: ".result.error.message)
-        return ""
-    endif
-
-    if has_key(result, 'id')
-        redraw
-        echo "Received response from goo.gl."
-        return result.id
-    endif
-
-    if !empty(error)
-        call s:errormsg("Error calling goo.gl API: ".error)
-        return ""
-    endif
-
-    call s:errormsg("No result returned by goo.gl API.")
-    return ""
-endfunction
-
 " Invoke URL shortening service to shorten a URL and insert it at the current
 " position in the current buffer.
 function! twitvim#GetShortURL(tweetmode, url, shortfn)

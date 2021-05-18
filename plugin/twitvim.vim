@@ -339,16 +339,6 @@ if !exists(":PIsGd")
     command -nargs=? PIsGd :call twitvim#GetShortURL("cmdline", <q-args>, "call_isgd")
 endif
 
-if !exists(":Googl")
-    command -nargs=? Googl :call twitvim#GetShortURL("insert", <q-args>, "call_googl")
-endif
-if !exists(":AGoogl")
-    command -nargs=? AGoogl :call twitvim#GetShortURL("append", <q-args>, "call_googl")
-endif
-if !exists(":PGoogl")
-    command -nargs=? PGoogl :call twitvim#GetShortURL("cmdline", <q-args>, "call_googl")
-endif
-
 if !exists(":Summize")
     command -nargs=? Summize :call twitvim#Summize(<q-args>, 1)
 endif
