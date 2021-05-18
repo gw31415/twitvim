@@ -1,16 +1,32 @@
+"
 " ==============================================================
 " TwitVim - Post to Twitter from Vim
 " Based on Twitter Vim script by Travis Jeffery <eatsleepgolf@gmail.com>
 "
-" Version: 0.9.1
+" Version: 0.0.1
 " License: Vim license. See :help license
 " Language: Vim script
-" Maintainer: Po Shan Cheah <morton@mortonfox.com>
-" Created: March 28, 2008
-" Last updated: September 4, 2015
+" Maintainer: Amadeus_vn <git@amas.dev>
+" Created: May 18, 2020
+" Last updated: May 18, 2020
 "
 " GetLatestVimScripts: 2204 1 twitvim.vim
 " ==============================================================
+"
+" This Project is distributed from the project below:
+    " ==============================================================
+    " TwitVim - Post to Twitter from Vim
+    " Based on Twitter Vim script by Travis Jeffery <eatsleepgolf@gmail.com>
+    "
+    " Version: 0.9.1
+    " License: Vim license. See :help license
+    " Language: Vim script
+    " Maintainer: Po Shan Cheah <morton@mortonfox.com>
+    " Created: March 28, 2008
+    " Last updated: September 4, 2015
+    "
+    " GetLatestVimScripts: 2204 1 twitvim.vim
+    " ==============================================================
 
 " Load this module only once.
 if exists('g:loaded_twitvim')
@@ -106,9 +122,9 @@ endif
 noremap <SID>Visual y:call twitvim#post_twitter(@", 0)<cr>
 noremap <unique> <script> <Plug>TwitvimVisual <SID>Visual
 if !hasmapto('<Plug>TwitvimVisual')
-    vmap <unique> <A-t> <Plug>TwitvimVisual
+    vmap <unique> <A-n> <Plug>TwitvimVisual
 
-    " Allow Ctrl-T as an alternative to Alt-T.
+    " Allow Ctrl-T as an alternative to Alt-N.
     " Alt-T pulls down the Tools menu if the menu bar is enabled.
     vmap <unique> <C-t> <Plug>TwitvimVisual
 endif

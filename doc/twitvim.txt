@@ -1143,10 +1143,10 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 ------------------------------------------------------------------------------
 4.4. Mappings						*TwitVim-mappings*
 
-	Alt-T						*TwitVim-A-t*
+	Alt-N						*TwitVim-A-t*
 	Ctrl-T						*TwitVim-C-t*
 
-	In visual mode, Alt-T posts the highlighted text to Twitter.
+	In visual mode, Alt-N posts the highlighted text to Twitter.
 
 	Ctrl-T is an alternative to the Alt-T mapping. In GUI Vim on
 	certain platforms like Windows, if the menu bar is enabled, Alt-T
@@ -1154,16 +1154,11 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 
 
 							*TwitVim-reply*
-	Alt-R						*TwitVim-A-r*
-	<Leader>r					*TwitVim-Leader-r*
+	r						*TwitVim-r*
 
 	This mapping is local to the timeline buffer. In the timeline buffer,
 	it starts composing an @-reply on the command line to the author of
 	the tweet on the current line.
-
-	Under Cygwin, Alt-R is not recognized so you can use <Leader>r as an
-	alternative. The <Leader> character defaults to \ (backslash) but see
-	|mapleader| for information on customizing that.
 
 	Note: Since this command uses input(), command-line editing and
 	history features are available here. In particular, you can use
@@ -1171,23 +1166,24 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 
 
 							*TwitVim-reply-all*
-	<Leader>Ctrl-R					*TwitVim-Leader-C-r*
+	Ctrl-R						*TwitVim-C-r*
 
 	This mapping is local to the timeline buffer. It starts composing a
 	reply to all, i.e. a reply to the tweet author and also to everyone
 	mentioned in @-replies on the current line.
 
-	<Leader>Q					*TwitVim-Leader-Q*
+							*TwitVim-quote-tweet*
+	R						*TwitVim-R*
 
 	This mapping is local to the timeline buffer. It starts composing a
 	tweet with tweet URL.
 
 							*TwitVim-retweet*
-	<Leader>R					*TwitVim-Leader-S-r*
+	t						*TwitVim-t*
 
-	This mapping (Note: uppercase 'R' instead of 'r'.) is local to the
-	timeline buffer. It is similar to the retweet feature in popular
-	Twitter clients. In the timeline buffer, it retweets the current line.
+	This mapping is local to the timeline buffer. It is similar to the
+	retweet feature in popular Twitter clients. In the timeline buffer,
+	it retweets the current line.
 
 
 							*twitvim_old_retweet*
@@ -1223,8 +1219,7 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 
 
 							*TwitVim-direct-message*
-	Alt-D						*TwitVim-A-d*
-	<Leader>d					*TwitVim-Leader-d*
+	m						*TwitVim-m*
 
 	This mapping is local to the timeline buffer. In the timeline buffer,
 	it starts composing a direct message on the command line to the author
@@ -1240,8 +1235,7 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 
 
 							*TwitVim-goto*
-	Alt-G						*TwitVim-A-g*
-	<Leader>g					*TwitVim-Leader-g*
+	o						*TwitVim-o*
 
 	This mapping is local to the timeline and info buffers. It
 	launches the web browser with the URL at the cursor position. If you
@@ -1277,24 +1271,8 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 		let twitvim_browser_cmd = 'open'
 <
 
-							*TwitVim-LongURL*
-	<Leader>e					*TwitVim-Leader-e*
-
-	This mapping is local to the timeline and info buffers. It
-	calls the LongURL API (see http://longurl.org/) to expand the short
-	URL at the cursor position. A short URL is a URL from a URL shortening
-	service such as TinyURL, SnipURL, etc. Use this feature if you wish to
-	preview a URL before browsing to it with |TwitVim-goto|.
-
-	If you visually select text before invoking this mapping, it calls the
-	LongURL API with the selected text as is.
-
-	If successful, TwitVim will display the result from LongURL in the
-	message area.
-
-
 							*TwitVim-profile*
-	<Leader>p					*TwitVim-Leader-p*
+	<Enter>						*TwitVim-Enter*
 
 	This mapping is local to the timeline and info buffers. It retrieves
 	user profile information (e.g. name, location, bio, update count) for
@@ -1308,13 +1286,13 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 
 
 							*TwitVim-inreplyto*
-	<Leader>@					*TwitVim-Leader-@*
+	@						*TwitVim-@*
 
 	This mapping is local to the timeline buffer. If the current line is
 	an @-reply tweet, it retrieves the tweet to which this one is
 	replying. Then it will display that predecessor tweet below the
 	current one.
-	
+
 	If there is no in-reply-to information, it will show a warning and do
 	nothing.
 
@@ -1322,27 +1300,26 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 
 
 							*TwitVim-delete*
-	<Leader>X					*TwitVim-Leader-X*
+	dd						*TwitVim-dd*
 
-	This mapping is local to the timeline buffer. The 'X' in the mapping
-	is uppercase. It deletes the tweet or direct message on the current
-	line.
+	This mapping is local to the timeline buffer. It deletes the tweet
+	or direct message on the current line.
 
 	Note: You have to be the author of the tweet in order to delete it.
 	However, you can delete direct messages that you sent or received.
 
 
 							*TwitVim-fave*
-							*TwitVim-Leader-f*
-	<Leader>f
+							*TwitVim-f*
+	f
 
 	This mapping is local to the timeline buffer. It adds the tweet on the
 	current line to your favorites.
 
 
 							*TwitVim-unfave*
-							*TwitVim-Leader-C-f*
-	<Leader>Ctrl-F
+							*TwitVim-F*
+	F
 
 	This mapping is local to the timeline buffer. It removes the tweet on
 	the current line from your favorites.
@@ -1367,7 +1344,7 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 
 
 							*TwitVim-refresh*
-	<Leader><Leader> 				*TwitVim-Leader-Leader*
+	. 						*TwitVim-.*
 
 	This mapping refreshes the timeline. See |:RefreshTwitter|.
 
@@ -1386,7 +1363,7 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 	long enough to use more than one page. It does nothing in the user
 	profile display. See |:NextInfoTwitter|.
 
-	
+
 							*TwitVim-previous*
 	Ctrl-PageUp					*TwitVim-C-PageUp*
 
@@ -1421,7 +1398,7 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 	The bit.ly API requires bit.ly access token. A default
 	access token is provided with TwitVim and no configuration is
 	needed.
-	
+
 	However, if you wish to supply your own access token to track
 	your bit.ly history and stats:
 	- Go to https://bitly.com/a/oauth_apps
@@ -1472,7 +1449,7 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 
 	:PIsGd						*:PIsGd*
 	:PIsGd {url}
-	
+
 	Same as :IsGd but prompts for a tweet on the command line with the
 	short URL already inserted.
 
@@ -1496,14 +1473,14 @@ License: The Vim License applies to twitvim.vim and twitvim.txt (see
 
 	:PGoogl						*:PGoogl*
 	:PGoogl {url}
-	
+
 	Same as :Googl but prompts for a tweet on the command line with the
 	short URL already inserted.
 
 
 	:SearchTwitter					*:SearchTwitter*
 	:SearchTwitter {query}
-	
+
 	This command calls the Search API to search for {query}. If {query} is
 	not provided on the command line, the command will prompt you for it.
 	Search results are then displayed in the timeline buffer.

@@ -2826,52 +2826,6 @@ function! s:info_getname()
     endif
 endfunction
 
-" Call LongURL API on a shorturl to expand it.
-function! s:call_longurl(url)
-    redraw
-    echo "Sending request to LongURL..."
-
-    let url = 'http://api.longurl.org/v1/expand?url='.s:url_encode(a:url)
-    let [error, output] = s:run_curl(url, '', s:get_proxy(), s:get_proxy_login(), {})
-    if !empty(error)
-        call s:errormsg("Error calling LongURL API: ".error)
-        return ""
-    endif
-    redraw
-    echo "Received response from LongURL."
-
-    let longurl = s:xml_get_element(output, 'long_url')
-    if longurl != ""
-        let longurl = substitute(longurl, '<!\[CDATA\[\(.*\)]]>', '\1', '')
-        return longurl
-    endif
-
-    let errormsg = s:xml_get_element(output, 'error')
-    if errormsg != ""
-        call s:errormsg("LongURL error: ".errormsg)
-        return ""
-    endif
-
-    call s:errormsg("Unknown response from LongURL: ".output)
-    return ""
-endfunction
-
-" Call LongURL API on the given string. If no string is provided, use the
-" current word. In the latter case, this function will try to recognize a URL
-" within the word. Otherwise, it'll just use the whole word.
-function! s:do_longurl(s)
-    let s = a:s
-    if s == ""
-        let s = substitute(expand("<cWORD>"), '.*\<\('.s:URLMATCH.'\)', '\1', "")
-    endif
-    let result = s:call_longurl(s)
-    if result != ""
-        redraw
-        echo s.' expands to '.result
-    endif
-endfunction
-
-
 " Just like do_user_info() but handle Name: lines in info buffer specially.
 function! s:do_user_info_infobuf()
     let name = s:info_getname()
@@ -3019,18 +2973,12 @@ function! s:twitter_win(wintype)
         setlocal nowrap
 
         " Launch browser with URL in visual selection or at cursor position.
-        nnoremap <buffer> <silent> <A-g> :call <SID>launch_url_cword(0)<cr>
-        nnoremap <buffer> <silent> <Leader>g :call <SID>launch_url_cword(0)<cr>
-        vnoremap <buffer> <silent> <A-g> y:call <SID>launch_browser(@")<cr>
-        vnoremap <buffer> <silent> <Leader>g y:call <SID>launch_browser(@")<cr>
+        nnoremap <buffer> <silent> o :call <SID>launch_url_cword(0)<cr>
+        vnoremap <buffer> <silent> o y:call <SID>launch_browser(@")<cr>
 
         " Get user info for current word or selection.
-        nnoremap <buffer> <silent> <Leader>p :call <SID>do_user_info("")<cr>
-        vnoremap <buffer> <silent> <Leader>p y:call <SID>do_user_info(@")<cr>
-
-        " Call LongURL API on current word or selection.
-        nnoremap <buffer> <silent> <Leader>e :call <SID>do_longurl("")<cr>
-        vnoremap <buffer> <silent> <Leader>e y:call <SID>do_longurl(@")<cr>
+        nnoremap <buffer> <silent> <Enter> :call <SID>do_user_info("")<cr>
+        vnoremap <buffer> <silent> <Enter> y:call <SID>do_user_info(@")<cr>
 
         if a:wintype == "userinfo"
             " Next page in info buffer.
@@ -3040,44 +2988,41 @@ function! s:twitter_win(wintype)
             nnoremap <buffer> <silent> <C-PageUp> :call <SID>PrevPageInfo()<cr>
 
             " Refresh info buffer.
-            nnoremap <buffer> <silent> <Leader><Leader> :call <SID>RefreshInfo()<cr>
+            nnoremap <buffer> <silent> . :call <SID>RefreshInfo()<cr>
 
             " We need this to be handled specially in the info buffer.
-            nnoremap <buffer> <silent> <A-g> :call <SID>launch_url_cword(1)<cr>
-            nnoremap <buffer> <silent> <Leader>g :call <SID>launch_url_cword(1)<cr>
+            nnoremap <buffer> <silent> o :call <SID>launch_url_cword(1)<cr>
 
             " This also needs to be handled specially for Name: lines.
-            nnoremap <buffer> <silent> <Leader>p :call <SID>do_user_info_infobuf()<cr>
+            nnoremap <buffer> <silent> <enter> :call <SID>do_user_info_infobuf()<cr>
 
             " Go back and forth through buffer stack.
             nnoremap <buffer> <silent> <C-o> :call <SID>back_buffer(1)<cr>
             nnoremap <buffer> <silent> <C-i> :call <SID>fwd_buffer(1)<cr>
         else
             " Quick reply feature for replying from the timeline.
-            nnoremap <buffer> <silent> <A-r> :call <SID>Quick_Reply()<cr>
-            nnoremap <buffer> <silent> <Leader>r :call <SID>Quick_Reply()<cr>
+            nnoremap <buffer> <silent> r :call <SID>Quick_Reply()<cr>
 
             " Quick DM feature for direct messaging from the timeline.
-            nnoremap <buffer> <silent> <A-d> :call <SID>Quick_DM()<cr>
-            nnoremap <buffer> <silent> <Leader>d :call <SID>Quick_DM()<cr>
+            nnoremap <buffer> <silent> m :call <SID>Quick_DM()<cr>
 
             " Retweet feature for replicating another user's tweet.
-            nnoremap <buffer> <silent> <Leader>R :call <SID>Retweet_2()<cr>
+            nnoremap <buffer> <silent> t :call <SID>Retweet_2()<cr>
 
             " Retweet feature for replicating another user's tweet.
-            nnoremap <buffer> <silent> <Leader>q :call <SID>Quote_Tweet()<cr>
+            nnoremap <buffer> <silent> R :call <SID>Quote_Tweet()<cr>
 
             " Reply to all feature.
-            nnoremap <buffer> <silent> <Leader><C-r> :call <SID>Reply_All()<cr>
+            nnoremap <buffer> <silent> <C-r> :call <SID>Reply_All()<cr>
 
             " Show in-reply-to for current tweet.
-            nnoremap <buffer> <silent> <Leader>@ :call <SID>show_inreplyto()<cr>
+            nnoremap <buffer> <silent> @ :call <SID>show_inreplyto()<cr>
 
             " Delete tweet or message on current line.
-            nnoremap <buffer> <silent> <Leader>X :call <SID>delete_tweet()<cr>
+            nnoremap <buffer> <silent> dd :call <SID>delete_tweet()<cr>
 
             " Refresh timeline.
-            nnoremap <buffer> <silent> <Leader><Leader> :call <SID>RefreshTimeline()<cr>
+            nnoremap <buffer> <silent> . :call <SID>RefreshTimeline()<cr>
 
             " Next page in timeline.
             nnoremap <buffer> <silent> <C-PageDown> :call <SID>NextPageTimeline()<cr>
@@ -3086,9 +3031,9 @@ function! s:twitter_win(wintype)
             nnoremap <buffer> <silent> <C-PageUp> :call <SID>PrevPageTimeline()<cr>
 
             " Favorite a tweet.
-            nnoremap <buffer> <silent> <Leader>f :call <SID>fave_tweet(0)<cr>
+            nnoremap <buffer> <silent> f :call <SID>fave_tweet(0)<cr>
             " Unfavorite a tweet.
-            nnoremap <buffer> <silent> <Leader><C-f> :call <SID>fave_tweet(1)<cr>
+            nnoremap <buffer> <silent> F :call <SID>fave_tweet(1)<cr>
 
             " Go back and forth through buffer stack.
             nnoremap <buffer> <silent> <C-o> :call <SID>back_buffer(0)<cr>
